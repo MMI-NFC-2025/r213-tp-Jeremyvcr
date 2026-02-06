@@ -1,0 +1,56 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import OffreCard from "../../components/OffreCard.astro";
+import PbImage from "../../components/PbImage.astro";
+import { getOffres } from "../../backend.mjs";
+
+type Offre = {
+  favori?: boolean;
+  [key: string]: unknown;
+};
+
+const offres = (await getOffres());
+---
+
+<Layout titre="Offres">
+  <h1>Offres</h1>
+
+
+  <button id="favori-button" class="bg-slate-600 rounded-lg text-white p-2">
+    Afficher les favoris
+  </button>
+
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+    {
+      offres.map((offre) => (
+        <div class="offre" data-favori={(offre.favori ?? false).toString()}>
+          <OffreCard offre={offre} />
+        </div>
+      ))
+    }
+  </div>
+
+  <script>
+    const button = document.getElementById("favori-button") as HTMLButtonElement | null;
+    let showOnlyFavorites = false;
+
+    if (button) {
+      button.addEventListener("click", () => {
+        showOnlyFavorites = !showOnlyFavorites;
+        const offres = document.querySelectorAll<HTMLElement>(".offre");
+
+        offres.forEach((offre) => {
+          const isFavori = offre.dataset.favori === "true";
+
+          if (showOnlyFavorites) {
+            offre.style.display = isFavori ? "block" : "none";
+            button.textContent = "Afficher tout";
+          } else {
+            offre.style.display = "block";
+            button.textContent = "Afficher les favoris";
+          }
+        });
+      });
+    }
+  </script>
+</Layout>

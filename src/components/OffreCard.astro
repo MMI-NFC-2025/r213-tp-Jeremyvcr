@@ -1,0 +1,26 @@
+---
+import PbImage from "./PbImage.astro";
+
+const { offre } = Astro.props;
+
+const imageName =
+  Array.isArray(offre.image) ? offre.image?.[0] : offre.image;
+---
+
+
+<article class="border rounded-lg p-4">
+    <h2 class="font-bold">{offre.nom_maison}</h2>
+    <p>{offre.adresse}</p>
+    <p>
+        {offre.nombre_chambre} chambres • {offre.nombre_salle_de_bain} sdb • {
+            offre.surface
+        } m²
+    </p>
+    <p class="font-semibold">{offre.prix} €</p>
+    <p>Favori : {offre.favori ? "oui" : "non"}</p>
+    <PbImage
+  record={offre}
+  image={(Array.isArray(offre.image) ? offre.image[0] : offre.image) ?? ""}
+/>
+
+</article>
