@@ -1,0 +1,20 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import OffreCard from "../../../components/OffreCard.astro";
+import { getOffres } from "../../../backend.mjs";
+
+const surfaceMin = Number(Astro.params.surface || 0);
+
+const offres = await getOffres();
+const offresFiltrees = offres.filter((o) => Number(o.surface) > surfaceMin);
+---
+
+<Layout titre={`Maisons avec surface > ${surfaceMin} m²`}>
+    <h1 class="text-2xl font-bold mb-4">
+        Maisons avec surface &gt; {surfaceMin} m²
+    </h1>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {offresFiltrees.map((offre) => <OffreCard offre={offre} />)}
+    </div>
+</Layout>

@@ -1,0 +1,60 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import { getOffres } from "../../backend.mjs";
+import OffreCard from "../../components/OffreCard.astro";
+
+const offres = await getOffres();
+---
+
+<Layout titre="Offres">
+
+  <!-- Section Favoris -->
+  <section class="mb-12">
+    <h2 class="text-2xl font-bold mb-4">⭐ Mes favoris</h2>
+
+    <div class="flex gap-6 overflow-x-auto pb-4" id="favoris-container">
+      {offres.map((offre) => (
+        <div class="min-w-87.5 shrink-0 favori-item hidden" data-id={offre.id}>
+          <OffreCard offre={offre} />
+        </div>
+      ))}
+    </div>
+    <p id="no-favoris" class="hidden text-gray-500">Aucun favori pour le moment.</p>
+  </section>
+
+  <hr class="border-slate-200 mb-10" />
+
+  <!-- Toutes les offres -->
+  <section>
+    <h1 class="text-3xl font-bold mb-6">Toutes les maisons</h1>
+
+    {offres.length > 0 ? (
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {offres.map((offre) => (
+          <OffreCard offre={offre} />
+        ))}
+      </div>
+    ) : (
+      <p class="text-gray-500">Aucune maison disponible.</p>
+    )}
+  </section>
+</Layout>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", function () {
+    var favoris = JSON.parse(localStorage.getItem("favoris") || "[]");
+    var items = document.querySelectorAll(".favori-item");
+    var shown = 0;
+
+    items.forEach(function (item) {
+      if (favoris.includes(item.dataset.id)) {
+        item.classList.remove("hidden");
+        shown++;
+      }
+    });
+
+    if (shown === 0) {
+      document.getElementById("no-favoris").classList.remove("hidden");
+    }
+  });
+</script>

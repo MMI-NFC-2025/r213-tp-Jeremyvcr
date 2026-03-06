@@ -2,25 +2,84 @@
 import PbImage from "./PbImage.astro";
 
 const { offre } = Astro.props;
-
-const imageName =
-  Array.isArray(offre.image) ? offre.image?.[0] : offre.image;
 ---
 
+<div class="bg-white rounded-xl shadow overflow-hidden flex flex-col">
+  <a href={`/offres/${offre.id}`}>
+    <PbImage record={offre} image="images" />
+  </a>
 
-<article class="border rounded-lg p-4">
-    <h2 class="font-bold">{offre.nom_maison}</h2>
-    <p>{offre.adresse}</p>
-    <p>
-        {offre.nombre_chambre} chambres • {offre.nombre_salle_de_bain} sdb • {
-            offre.surface
-        } m²
+  <div class="p-4 flex flex-col flex-1">
+    <h2 class="text-xl font-bold mb-2">{offre.nom_maison}</h2>
+
+    <p class="text-gray-600 text-sm mb-1">
+      {offre.surface} m² &middot; {offre.nombre_chambre} ch. &middot; {offre.nombre_sdb} sdb
     </p>
-    <p class="font-semibold">{offre.prix} €</p>
-    <p>Favori : {offre.favori ? "oui" : "non"}</p>
-    <PbImage
-  record={offre}
-  image={(Array.isArray(offre.image) ? offre.image[0] : offre.image) ?? ""}
-/>
 
-</article>
+    <p class="text-lg font-semibold mt-1 mb-4">
+      {offre.Prix ? `${offre.Prix.toLocaleString("fr-FR")} €` : "Prix non renseigné"}
+    </p>
+
+    <div class="flex justify-between items-center mt-auto">
+      <a
+        href={`/offres/${offre.id}`}
+        class="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm hover:bg-blue-700"
+      >
+        Voir plus
+      </a>
+
+      <button class="favori-btn p-1" data-id={offre.id}>
+        <img
+          src="/favorite.png"
+          alt="Favori"
+          width="28"
+          height="28"
+        />
+      </button>
+    </div>
+  </div>
+</div>
+
+<script is:inline>
+  (function () {
+    function getFavoris() {
+      return JSON.parse(localStorage.getItem("favoris") || "[]");
+    }
+    function saveFavoris(ids) {
+      localStorage.setItem("favoris", JSON.stringify(ids));
+    }
+
+    // Initialise l'icône de chaque bouton selon localStorage
+    document.querySelectorAll(".favori-btn").forEach(function (btn) {
+      var id = btn.dataset.id;
+      if (getFavoris().includes(id)) {
+        btn.querySelector("img").src = "/favorite_filled.png";
+      }
+    });
+
+    if (!window.__favoriListenerAdded) {
+      window.__favoriListenerAdded = true;
+      document.addEventListener("click", function (e) {
+        var btn = e.target.closest(".favori-btn");
+        if (!btn) return;
+
+        var id = btn.dataset.id;
+        var favoris = getFavoris();
+        var idx = favoris.indexOf(id);
+        var isFavori;
+
+        if (idx === -1) {
+          favoris.push(id);
+          isFavori = true;
+        } else {
+          favoris.splice(idx, 1);
+          isFavori = false;
+        }
+        saveFavoris(favoris);
+
+        var img = btn.querySelector("img");
+        if (img) img.src = isFavori ? "/favorite_filled.png" : "/favorite.png";
+      });
+    }
+  })();
+</script>

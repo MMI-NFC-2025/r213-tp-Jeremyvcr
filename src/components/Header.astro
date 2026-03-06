@@ -1,4 +1,57 @@
-<nav>
-	<a href="/">Accueil</a>
-	<a href="/offres">Offres</a>
-</nav>
+---
+const pathname = Astro.url.pathname;
+const isActive = (path: string) => pathname === path;
+---
+
+<header class="bg-white shadow">
+  <nav class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+    <a href="/" class="text-2xl font-bold text-slate-900">
+      CityHome
+    </a>
+
+    <div class="flex gap-4 items-center">
+      <a
+        href="/"
+        class={`px-4 py-2 rounded-lg font-medium ${
+          isActive("/") ? "bg-blue-600 text-white" : "text-slate-900"
+        }`}
+      >
+        Accueil
+      </a>
+
+      <a
+        href="/offres"
+        class={`px-4 py-2 rounded-lg font-medium ${
+          isActive("/offres") ? "bg-blue-600 text-white" : "text-slate-900"
+        }`}
+      >
+        Offres
+      </a>
+
+      <a
+        href="/favoris"
+        class={`px-4 py-2 rounded-lg font-medium ${
+          isActive("/favoris") ? "bg-blue-600 text-white" : "text-slate-900"
+        }`}
+      >
+        ⭐ Favoris
+      </a>
+
+      <a
+        href="/agents"
+        class={`px-4 py-2 rounded-lg font-medium ${
+          isActive("/agents") ? "bg-blue-600 text-white" : "text-slate-900"
+        }`}
+      >
+        Agents
+      </a>
+
+      <a
+        href="/offres/add"
+        class="px-4 py-2 rounded-lg font-medium bg-blue-600 text-white"
+      >
+        Ajouter une offre
+      </a>
+    </div>
+  </nav>
+</header>

@@ -1,0 +1,43 @@
+---
+import Layout from "../layouts/Layout.astro";
+import { getOffres } from "../backend.mjs";
+import OffreCard from "../components/OffreCard.astro";
+
+const offres = await getOffres();
+---
+
+<Layout titre="Mes favoris">
+  <h1 class="text-3xl font-bold mb-8">⭐ Mes favoris</h1>
+
+  <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="favoris-grid">
+    {offres.map((offre) => (
+      <div class="favori-item hidden" data-id={offre.id}>
+        <OffreCard offre={offre} />
+      </div>
+    ))}
+  </div>
+
+  <p id="no-favoris" class="hidden text-gray-500 text-lg">
+    Vous n'avez pas encore de favoris.<br />
+    <a href="/offres" class="text-blue-600 hover:underline mt-2 inline-block">Parcourir les offres →</a>
+  </p>
+</Layout>
+
+<script is:inline>
+  document.addEventListener("DOMContentLoaded", function () {
+    var favoris = JSON.parse(localStorage.getItem("favoris") || "[]");
+    var items = document.querySelectorAll(".favori-item");
+    var shown = 0;
+
+    items.forEach(function (item) {
+      if (favoris.includes(item.dataset.id)) {
+        item.classList.remove("hidden");
+        shown++;
+      }
+    });
+
+    if (shown === 0) {
+      document.getElementById("no-favoris").classList.remove("hidden");
+    }
+  });
+</script>

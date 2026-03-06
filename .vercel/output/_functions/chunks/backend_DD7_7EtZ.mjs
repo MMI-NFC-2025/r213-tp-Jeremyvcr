@@ -1,8 +1,8 @@
-import PocketBase from "pocketbase";
+import PocketBase from 'pocketbase';
 
-export const pb = new PocketBase("http://127.0.0.1:8090");
+const pb = new PocketBase("http://127.0.0.1:8090");
 
-export async function getOffres() {
+async function getOffres() {
   try {
     return await pb.collection("Maison").getFullList({
       sort: "-created",
@@ -13,7 +13,7 @@ export async function getOffres() {
   }
 }
 
-export async function getOffre(id) {
+async function getOffre(id) {
   try {
     return await pb.collection("Maison").getOne(id);
   } catch (error) {
@@ -22,7 +22,7 @@ export async function getOffre(id) {
   }
 }
 
-export async function getAgents() {
+async function getAgents() {
   try {
     return await pb.collection("Agent").getFullList();
   } catch (error) {
@@ -31,7 +31,7 @@ export async function getAgents() {
   }
 }
 
-export async function getOffresByAgent(agentId) {
+async function getOffresByAgent(agentId) {
   try {
     return await pb.collection("Maison").getFullList({
       filter: `Agent = "${agentId}"`,
@@ -43,7 +43,7 @@ export async function getOffresByAgent(agentId) {
   }
 }
 
-export function getImageUrl(record, field = "images") {
+function getImageUrl(record, field = "images") {
   if (!record) return null;
 
   const value = record[field];
@@ -55,7 +55,7 @@ export function getImageUrl(record, field = "images") {
   return pb.files.getURL(record, fileName);
 }
 
-export async function setFavori(house) {
+async function setFavori(house) {
   try {
     await pb.collection("Maison").update(house.id, {
       favori: !house.favori,
@@ -65,7 +65,7 @@ export async function setFavori(house) {
   }
 }
 
-export async function addOffre(formData) {
+async function addOffre(formData) {
   try {
     const result = await pb.collection("Maison").create(formData);
     return { success: true, message: "Offre ajoutée avec succès", data: result };
@@ -74,3 +74,5 @@ export async function addOffre(formData) {
     return { success: false, message: "Erreur lors de l'ajout de l'offre" };
   }
 }
+
+export { getOffresByAgent as a, addOffre as b, getOffres as c, getOffre as d, getImageUrl as e, getAgents as g, setFavori as s };

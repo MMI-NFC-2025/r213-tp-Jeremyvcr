@@ -1,18 +1,23 @@
 ---
 import Header from "../components/Header.astro";
-const { titre } = Astro.props;
+import Footer from "../components/Footer.astro";
+import "../styles/global.css";
+
+const { titre = "CityHome" } = Astro.props;
 ---
 
+<!DOCTYPE html>
 <html lang="fr">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width" />
-        <title>{titre}</title>
-    </head>
-    <body>
-        <Header />
-        <main>
-            <slot />
-        </main>
-    </body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{titre}</title>
+  </head>
+  <body class="bg-slate-100 text-slate-900 min-h-screen flex flex-col">
+    <Header />
+    <main class="max-w-7xl mx-auto w-full px-6 py-10 flex-1">
+      <slot />
+    </main>
+    <Footer />
+  </body>
 </html>
